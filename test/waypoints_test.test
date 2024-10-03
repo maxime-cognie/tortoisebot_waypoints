@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<launch>
+  <node pkg="tortoisebot_waypoints" type="tortoisebot_action_server.py" name="tortoisebot_action_server" />
+  <param name="goal_x" value="1.0" />
+  <param name="goal_y" value="0.0" />
+  <param name="goal_yaw" value="0.0" />
+  <param name="precision_xy" value="0.1" />
+  <param name="precision_yaw" value="0.2" />
+  <test test-name="tortoisebot_waypoints_test" pkg="tortoisebot_waypoints" type="tortoisebot_waypoints_test.py"/>
+</launch>

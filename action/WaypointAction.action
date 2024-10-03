@@ -1,9 +1,9 @@
-# goal definition
+# Goal
 geometry_msgs/Point position
 ---
-# result definition
+# Result
 bool success
 ---
-# feedback
+# Feedback
 geometry_msgs/Point position
 string state

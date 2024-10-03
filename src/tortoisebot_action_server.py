@@ -3,7 +3,7 @@ import rospy
 import time
 import actionlib
 
-from course_web_dev_ros.msg import WaypointActionFeedback, WaypointActionResult, WaypointActionAction
+from tortoisebot_waypoints.msg import WaypointActionFeedback, WaypointActionResult, WaypointActionAction
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Empty
 from geometry_msgs.msg import Twist, Point
@@ -98,11 +98,30 @@ class WaypointActionClass(object):
                 rospy.loginfo("go to point")
                 self._state = 'go to point'
                 twist_msg = Twist()
-                twist_msg.linear.x = 0.6
+                twist_msg.linear.x = 0.2
                 twist_msg.angular.z = 0
                 # twist_msg.angular.z = 0.1 if err_yaw > 0 else -0.1
                 self._pub_cmd_vel.publish(twist_msg)
 
+            # send feedback
+            self._feedback.position = self._position
+            self._feedback.state = self._state
+            self._as.publish_feedback(self._feedback)
+
+            # loop rate
+            self._rate.sleep()
+        
+        desired_yaw = self._des_pos.z
+        err_yaw = desired_yaw - self._yaw
+        while abs(err_yaw) > self._yaw_precision and success:
+            desired_yaw = self._des_pos.z
+            err_yaw = desired_yaw - self._yaw
+            # fix yaw
+            rospy.loginfo("fix yaw")
+            self._state = 'fix yaw'
+            twist_msg = Twist()
+            twist_msg.angular.z = 0.65 if err_yaw > 0 else -0.65
+            self._pub_cmd_vel.publish(twist_msg)
             # send feedback
             self._feedback.position = self._position
             self._feedback.state = self._state
